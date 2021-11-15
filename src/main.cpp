@@ -6,6 +6,8 @@
 #include "DHT.h"
 #include <string.h>
 #include <function.hpp>
+#include <Servo.h>
+
 
 //Declaration de l'ecran
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);        // select the pins used on the LCD panel
