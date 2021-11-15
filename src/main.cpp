@@ -21,8 +21,8 @@ unsigned long tepTimer ;
 //VARIABLE POUR LE SENSOR
     int val;                               // variable to store the value coming from the analog pin
     double data;                           // variable to store the temperature value coming from the conversion formula
-    double data_t;
-    double data_h;
+    volatile double data_t;
+    volatile double data_h;
 
 
 #define PIN_Button 0
@@ -121,7 +121,6 @@ void choseMode(){
             mode = 20;
           }
           end_action = true;
-          //press_action = false;
         }
 
 
@@ -144,7 +143,6 @@ void choseMode(){
             mode = 20;
           }
           
-          //press_action = false;
           end_action = true;
         }
     }
@@ -187,20 +185,24 @@ void readSensor(){
     // Read temperature as Celsius (the default)
     float t = dht.readTemperature();
     // Read temperature as Fahrenheit (isFahrenheit = true)
-    float f = dht.readTemperature(true);
+    //float f = dht.readTemperature(true);
     // Compute heat index in Fahrenheit (the default)
     //float hif = dht.computeHeatIndex(f, h);
     // Compute heat index in Celsius (isFahreheit = false)
     //float hic = dht.computeHeatIndex(t, h, false);
 
 // Check if any reads failed and exit early (to try again).
-    if (isnan(h) || isnan(t) || isnan(f)) 
+    // if (isnan(h) || isnan(t) || isnan(f)) 
+    // {
+    //   Serial.println(F("Failed to read from DHT sensor!"));
+    //   return;
+    // }
+    
+    if (isnan(h) || isnan(t)) 
     {
       Serial.println(F("Failed to read from DHT sensor!"));
       return;
     }
-    
-
 //affichage des donnees sur l'echan a une frequence X
     data_t = t;
     data_h = h; 
@@ -212,11 +214,11 @@ void taskReadSensor(void *pvParameters)
     if (boolreadSensor == true)
     {
         readSensor();
-        vTaskDelay( 1000 / portTICK_PERIOD_MS );
+        vTaskDelay( 400 / portTICK_PERIOD_MS );
 
     }
-    //Serial.println(data_t);
-    //Serial.println(data_h);
+    Serial.println(data_t);
+    Serial.println(data_h);
 
 }
 
